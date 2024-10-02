@@ -134,8 +134,8 @@ def main():
     planets = [sun, earth, mars, mercury, venus]
 
     while run:
-        clock.tick(60)  # Set simulation to run at 60 frames per second
-        window.fill(Black)  # Fill window with black background
+        clock.tick(60) 
+        window.fill(Black)  
 
         # Draw stars in the background
         #draw_stars(window)
@@ -145,14 +145,14 @@ def main():
                 run = False
 
         for planet in planets:
-            planet.update_position(planets)  # Update planet positions
-            planet.draw(window)  # Draw planets and their orbits
+            planet.update_position(planets)  
+            planet.draw(window)  
 
         # Draw sun glow effect
-        pygame.draw.circle(window, (255, 255, 100, 50), (width / 2, height / 2), 20)  # A larger circle for glow
+        pygame.draw.circle(window, (255, 255, 100, 50), (width / 2, height / 2), 20)  # The glow of the sun
         pygame.draw.circle(window, (255, 255, 150, 50), (width / 2, height / 2), 20)
 
-        pygame.display.update()  # Update the display
+        pygame.display.update()  
 
     pygame.quit()
 
