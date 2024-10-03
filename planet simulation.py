@@ -39,22 +39,23 @@ class Planet:
         self.y_vel = 0
 
     # Draws the planet and its orbit on the window
-    def draw(self, win, x_offset=0, y_offset=0):
+    def draw(self, win, x_offset=0, y_offset=0, zoom = 1.0):
         
         # Font for distance text
         FONT = pygame.font.SysFont("comicsans", 16)
         
         # Convert planet's position from AU to pixel coordinates
-        x = self.x * self.Scale + width / 2 + x_offset
-        y = self.y * self.Scale + height / 2 + y_offset
+        x = (self.x * self.Scale * zoom) + width / 2 + x_offset
+        y = (self.y * self.Scale * zoom) + height / 2 + y_offset
+        radius = int(self.radius * zoom)
         
         # Draw orbit line
         if len(self.orbit) > 2:
             updated_points = []
             for point in self.orbit:
                 orbit_x, orbit_y = point
-                orbit_x = orbit_x * self.Scale + width / 2 + x_offset
-                orbit_y = orbit_y * self.Scale + height / 2 + y_offset
+                orbit_x = (orbit_x * self.Scale * zoom) + width / 2 + x_offset
+                orbit_y = (orbit_y * self.Scale * zoom) + height / 2 + y_offset
                 updated_points.append((orbit_x, orbit_y))
             pygame.draw.lines(window, self.color, False, updated_points, 2)
 
@@ -152,12 +153,13 @@ def main():
 
     planets = [sun, earth, mars, mercury, venus, jupiter, saturn, uranus, neptune]
     
+    zoom_factor = 1.0  
+    zoom_increment = 0.15
   
     while run:
         clock.tick(60)  
         window.fill(Black)  
      
-        #Draw stars in the background
         draw_stars(window)
 
         for event in pygame.event.get():
@@ -168,23 +170,28 @@ def main():
                     paused = not paused
                     is_dragging = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Left click
+                if event.button == 1:
                     is_dragging = True
                     last_mouse_pos = pygame.mouse.get_pos()
             elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:  # doing this is so it lets go when leftclick is up, and does not follow the mouse
-                    is_dragging = False 
+                if event.button == 1:
+                    is_dragging = False
             elif event.type == pygame.MOUSEMOTION:
                 if is_dragging:
                     mouse_pos = pygame.mouse.get_pos()
                     x_offset += mouse_pos[0] - last_mouse_pos[0]
                     y_offset += mouse_pos[1] - last_mouse_pos[1]
                     last_mouse_pos = mouse_pos
+            elif event.type == pygame.MOUSEWHEEL:
+                if event.y > 0:  # Scrolled up
+                    zoom_factor += zoom_increment
+                elif event.y < 0:  # Scrolled down
+                    zoom_factor = max(zoom_factor - zoom_increment, 0.1)
         
         for planet in planets:
             if not paused:
                 planet.update_position(planets) 
-            planet.draw(window, x_offset, y_offset) 
+            planet.draw(window, x_offset, y_offset, zoom=zoom_factor) 
             
             # Draw sun glow effect
             #pygame.draw.circle(window, (255, 255, 100, 50), (width // 2, height // 2), 60)  
