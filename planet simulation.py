@@ -183,9 +183,9 @@ def main():
                     y_offset += mouse_pos[1] - last_mouse_pos[1]
                     last_mouse_pos = mouse_pos
             elif event.type == pygame.MOUSEWHEEL:
-                if event.y > 0:  # Scrolled up
+                if event.y > 0:  
                     zoom_factor += zoom_increment
-                elif event.y < 0:  # Scrolled down
+                elif event.y < 0:  
                     zoom_factor = max(zoom_factor - zoom_increment, 0.1)
         
         for planet in planets:
